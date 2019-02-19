@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: NoSql | Y.sun个人博客</title>
+  <title>App启动白屏问题 | Y.sun个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Y.sun个人博客网站">
-<meta name="keywords" content="Android">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Y.sun个人博客">
-<meta property="og:url" content="http://yoursite.com/tags/NoSql/index.html">
+  <meta name="description" content="现象Android app启动页面不作任何特殊处理的话，会出现一瞬间的白屏现象。 页面加载一个布局layout的话，不做任何耗时处理，也会出现一瞬间的白屏或者黑屏现象，这主要看App设置的style样式。 点击Launcher桌面图标冷启动一个App的时候，程序需要进行一些基本的初始化动工作，Application或者SplashActivity中做了耗时操作，当手机性能不好，配置不高的时候，白屏">
+<meta name="keywords" content="android,启动白屏,theme">
+<meta property="og:type" content="article">
+<meta property="og:title" content="App启动白屏问题">
+<meta property="og:url" content="http://yoursite.com/2018/10/12/App启动白屏问题/index.html">
 <meta property="og:site_name" content="Y.sun个人博客">
-<meta property="og:description" content="Y.sun个人博客网站">
+<meta property="og:description" content="现象Android app启动页面不作任何特殊处理的话，会出现一瞬间的白屏现象。 页面加载一个布局layout的话，不做任何耗时处理，也会出现一瞬间的白屏或者黑屏现象，这主要看App设置的style样式。 点击Launcher桌面图标冷启动一个App的时候，程序需要进行一些基本的初始化动工作，Application或者SplashActivity中做了耗时操作，当手机性能不好，配置不高的时候，白屏">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-18T03:16:48.909Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Y.sun个人博客">
-<meta name="twitter:description" content="Y.sun个人博客网站">
+<meta name="twitter:title" content="App启动白屏问题">
+<meta name="twitter:description" content="现象Android app启动页面不作任何特殊处理的话，会出现一瞬间的白屏现象。 页面加载一个布局layout的话，不做任何耗时处理，也会出现一瞬间的白屏或者黑屏现象，这主要看App设置的style样式。 点击Launcher桌面图标冷启动一个App的时候，程序需要进行一些基本的初始化动工作，Application或者SplashActivity中做了耗时操作，当手机性能不好，配置不高的时候，白屏">
   
     <link rel="alternative" href="/atom.xml" title="Y.sun个人博客" type="application/atom+xml">
   
@@ -142,64 +143,213 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="android-App启动白屏问题" class="article article-type-android " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/08/08/ObjectBox简记/" class="archive-article-date">
-  	<time datetime="2017-08-08T14:18:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-08</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/08/ObjectBox简记/">ObjectBox简记</a>
+    <h1 class="article-title" itemprop="name">
+      App启动白屏问题
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/10/12/App启动白屏问题/" class="archive-article-date">
+  	<time datetime="2018-10-12T01:14:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h4><p>Android app启动页面不作任何特殊处理的话，会出现一瞬间的白屏现象。</p>
+<p>页面加载一个布局layout的话，不做任何耗时处理，也会出现一瞬间的白屏或者黑屏现象，这主要看App设置的style样式。</p>
+<p>点击Launcher桌面图标冷启动一个App的时候，程序需要进行一些基本的初始化动工作，Application或者SplashActivity中做了耗时操作，当手机性能不好，配置不高的时候，白屏(黑屏)现象尤其严重。</p>
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>当系统启动一个APP时，zygote进程会首先创建一个新的进程去运行这个APP，但是进程的创建是需要时间的，在创建完成之前，界面是呈现假死状态，于是系统根据你的manifest文件设置的主题颜色的不同来展示一个白屏或者黑屏。而这个黑（白）屏正式的称呼应该是Preview Window，即预览窗口。</p>
+<p>实际上就是是activity默认的主题中的android:windowBackground为白色或者黑色导致的。</p>
+<p>总结来说启动顺序就是：app启动——Preview Window(也称为预览窗口)——启动页</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>1、方案分析</p>
+<ul>
+<li><p>Android在选择展示黑屏或者白屏的时候，是根据你设定的主题而不同的，也就是说，虽然你的代码没有被执行，你的配置文件却被提前读取了，用来作为展示Preview Window界面的依据。所以，解决方案的切入口就是整个APP的manifest文件，更确切的说应该是主题配置文件。</p>
+</li>
+<li><p>设置配置文件style样式中的windowBackground这个属性来显示一张背景图还有一个效果就是启动应用程序会感觉非常快，而且与加载MainActivity的contentView是异步的。</p>
+</li>
+</ul>
+<p>2.解决方式</p>
+<ul>
+<li><p>方案1，给当前启动页面添加一个有背景的style样式，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=&quot;SplashTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowBackground&quot;&gt;@mipmap/splash&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">//注意 在清单文件中配置</span><br><span class="line">&lt;activity android:name=&quot;.SplashActivity&quot;</span><br><span class="line">    android:theme=&quot;@style/SplashTheme&quot;&gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+<p>将上面的App的主题设置到SplashActivity的主题中，windowBackGround就是即将展示的previewWindow，splash可以是一整张图片，也可以是解析出来的图片资源的xml文件，经过处理之后的App就不会出现一瞬间的黑屏或者白屏情况。</p>
+<blockquote>
+<p>注意事项</p>
+<ul>
+<li>给prewiew设置的的背景图如果不做处理，图片会一直存在于内存中，所以当我我们进入欢迎页面时，不要忘记把背景图片设为空。</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">    //将window的背景图设置为空</span><br><span class="line">    getWindow().setBackgroundDrawable(null);</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这样做如何做好屏幕适配<ul>
+<li>这样通过style设置的SplashActivity加载图，不能像ImageView设置缩放功能，但是可以使用 .9图。</li>
+<li>设计好图，直接铺满全屏</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>方案2  禁止加载Preview Window，具体做法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=&quot;SplashTheme&quot; parent=&quot;@style/Theme.AppCompat.Light.NoActionBar&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowDisablePreview&quot;&gt;true&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>设定为启动的Activity的主题，即可禁止Preview Window，当然，也有人通过把preview window设置为全透明，也达成了类似的效果。个人感觉这种方法没有第一种好！</p>
+</li>
+<li><p>windowDisablePreview的作用，通过设置android:windowDisablePreview属性，禁用窗口的预览动画，在SplashActivity显示之前，系统永远不会使用窗口的主题来显示它的预览，这也保证了不会出现白屏或者黑屏。但是，与设置android:windowIsTranslucent属性一样，如果在SplashActivity启动的时候，有过多复杂的操作，就会出现在手机中点击了应用程序的图标，但过n秒才会打开应用程序不好的卡顿体验效果.</p>
+<blockquote>
+<p>该方案的缺点</p>
+<p>这种方法有个小缺点，就是点击后短暂的那几百毫秒没有反应，就好像“假死”了一样，过了一会儿才跳出我们应用程序的第一个Activity，如果你不想让你的 App 有这个短暂“假死”时间，建议使用第一种方法。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">android</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">NoSql</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">启动白屏</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">theme</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/10/12/App启动白屏问题/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2017/08/12/dagger2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Dagger2使用详记</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script>
+  var cloudTieConfig = {
+    url: "http://yoursite.com/2018/10/12/App启动白屏问题/", 
+    sourceId: "App启动白屏问题",
+    productKey: "true",
+    target: "cloud-tie-wrapper"
+  };
+</script>
+<script src="//img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -222,9 +372,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

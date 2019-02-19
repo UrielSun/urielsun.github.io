@@ -144,6 +144,136 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="android-App启动白屏问题" class="article article-type-android  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/10/12/App启动白屏问题/">App启动白屏问题</a>
+    </h1>
+  
+
+        
+        <a href="/2018/10/12/App启动白屏问题/" class="archive-article-date">
+  	<time datetime="2018-10-12T01:14:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h4><p>Android app启动页面不作任何特殊处理的话，会出现一瞬间的白屏现象。</p>
+<p>页面加载一个布局layout的话，不做任何耗时处理，也会出现一瞬间的白屏或者黑屏现象，这主要看App设置的style样式。</p>
+<p>点击Launcher桌面图标冷启动一个App的时候，程序需要进行一些基本的初始化动工作，Application或者SplashActivity中做了耗时操作，当手机性能不好，配置不高的时候，白屏(黑屏)现象尤其严重。</p>
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>当系统启动一个APP时，zygote进程会首先创建一个新的进程去运行这个APP，但是进程的创建是需要时间的，在创建完成之前，界面是呈现假死状态，于是系统根据你的manifest文件设置的主题颜色的不同来展示一个白屏或者黑屏。而这个黑（白）屏正式的称呼应该是Preview Window，即预览窗口。</p>
+<p>实际上就是是activity默认的主题中的android:windowBackground为白色或者黑色导致的。</p>
+<p>总结来说启动顺序就是：app启动——Preview Window(也称为预览窗口)——启动页</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><p>1、方案分析</p>
+<ul>
+<li><p>Android在选择展示黑屏或者白屏的时候，是根据你设定的主题而不同的，也就是说，虽然你的代码没有被执行，你的配置文件却被提前读取了，用来作为展示Preview Window界面的依据。所以，解决方案的切入口就是整个APP的manifest文件，更确切的说应该是主题配置文件。</p>
+</li>
+<li><p>设置配置文件style样式中的windowBackground这个属性来显示一张背景图还有一个效果就是启动应用程序会感觉非常快，而且与加载MainActivity的contentView是异步的。</p>
+</li>
+</ul>
+<p>2.解决方式</p>
+<ul>
+<li><p>方案1，给当前启动页面添加一个有背景的style样式，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=&quot;SplashTheme&quot; parent=&quot;AppTheme&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowBackground&quot;&gt;@mipmap/splash&lt;/item&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowIsTranslucent&quot;&gt;true&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">//注意 在清单文件中配置</span><br><span class="line">&lt;activity android:name=&quot;.SplashActivity&quot;</span><br><span class="line">    android:theme=&quot;@style/SplashTheme&quot;&gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</span><br><span class="line">        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+<p>将上面的App的主题设置到SplashActivity的主题中，windowBackGround就是即将展示的previewWindow，splash可以是一整张图片，也可以是解析出来的图片资源的xml文件，经过处理之后的App就不会出现一瞬间的黑屏或者白屏情况。</p>
+<blockquote>
+<p>注意事项</p>
+<ul>
+<li>给prewiew设置的的背景图如果不做处理，图片会一直存在于内存中，所以当我我们进入欢迎页面时，不要忘记把背景图片设为空。</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">    //将window的背景图设置为空</span><br><span class="line">    getWindow().setBackgroundDrawable(null);</span><br><span class="line">    super.onCreate(savedInstanceState);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这样做如何做好屏幕适配<ul>
+<li>这样通过style设置的SplashActivity加载图，不能像ImageView设置缩放功能，但是可以使用 .9图。</li>
+<li>设计好图，直接铺满全屏</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>方案2  禁止加载Preview Window，具体做法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style name=&quot;SplashTheme&quot; parent=&quot;@style/Theme.AppCompat.Light.NoActionBar&quot;&gt;</span><br><span class="line">    &lt;item name=&quot;android:windowDisablePreview&quot;&gt;true&lt;/item&gt;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>设定为启动的Activity的主题，即可禁止Preview Window，当然，也有人通过把preview window设置为全透明，也达成了类似的效果。个人感觉这种方法没有第一种好！</p>
+</li>
+<li><p>windowDisablePreview的作用，通过设置android:windowDisablePreview属性，禁用窗口的预览动画，在SplashActivity显示之前，系统永远不会使用窗口的主题来显示它的预览，这也保证了不会出现白屏或者黑屏。但是，与设置android:windowIsTranslucent属性一样，如果在SplashActivity启动的时候，有过多复杂的操作，就会出现在手机中点击了应用程序的图标，但过n秒才会打开应用程序不好的卡顿体验效果.</p>
+<blockquote>
+<p>该方案的缺点</p>
+<p>这种方法有个小缺点，就是点击后短暂的那几百毫秒没有反应，就好像“假死”了一样，过了一会儿才跳出我们应用程序的第一个Activity，如果你不想让你的 App 有这个短暂“假死”时间，建议使用第一种方法。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">启动白屏</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">theme</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/10/12/App启动白屏问题/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-dagger2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -513,7 +643,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 Y.sun
+    		&copy; 2019 Y.sun
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
