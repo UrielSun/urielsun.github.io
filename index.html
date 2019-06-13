@@ -144,6 +144,221 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Flutter-NestedScrollView使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/13/Flutter-NestedScrollView使用/">Flutter NestedScrollView使用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/13/Flutter-NestedScrollView使用/" class="archive-article-date">
+  	<time datetime="2019-06-13T02:11:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Flutter-NestedScrollView-使用"><a href="#Flutter-NestedScrollView-使用" class="headerlink" title="Flutter NestedScrollView 使用"></a>Flutter NestedScrollView 使用</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>​       在我们使用开发Android的过程中总是遇到一些联动的效果，在Android原生中<code>NestedScrollView</code>和<code>Toolbar</code>配合进行交互，进行很多折叠效果。在Flutter中也也是可以通过<code>NestedScrollView</code>进行折叠效果，不过Flutter中使用<code>SliverAppBar</code>来代替<code>Toolbar</code>。</p>
+<p>​        说到<code>SliverAppBar</code> 我们就有必要了解下 <code>Slivers</code>家族，官网给出的<code>Slivers</code>家族主要是为了解决复杂的滑动嵌套布局。<code>Slivers</code>家族基本都是配合<code>CustomScrollView</code>来使用的的。</p>
+<p><code>Slivers</code>家族的成员还比较多，下面我对部分成员进行解释：</p>
+<ul>
+<li><p>实现的效果图如下</p>
+<p><img src="https://i.loli.net/2019/06/13/5d01c50f9170291554.gif" alt="&quot;效果图&quot;"></p>
+</li>
+</ul>
+<ul>
+<li><p><strong>CustomScrollView</strong></p>
+<blockquote>
+<p>官网给出的解释如下：</p>
+<p>​     CustomScrollView是可以使用sliver来自定义滚动模型（效果）的widget。它可以包含多种滚动模型，举个例子，假设有一个页面，顶部需要一个GridView，底部需要一个ListView，而要求整个页面的滑动效果是统一的，即它们看起来是一个整体，如果使用GridView+ListView来实现的话，就不能保证一致的滑动效果，因为它们的滚动效果是分离的，所以这时就需要一个”胶水”，把这些彼此独立的可滚动widget（Sliver）”粘”起来，而CustomScrollView的功能就相当于“胶水”。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p><strong>Slivers</strong>家族</p>
+<blockquote>
+<p>Sliver有细片、小片之意，在Flutter中，Sliver通常指具有特定滚动效果的可滚动块。可滚动widget，如ListView、GridView等都有对应的Sliver实现如SliverList、SliverGrid等。对于大多数Sliver来说，它们和可滚动Widget最主要的区别是<strong>Sliver不会包含Scrollable Widget，也就是说Sliver本身不包含滚动交互模型</strong> ，正因如此，CustomScrollView才可以将多个Sliver”粘”在一起，这些Sliver共用CustomScrollView的Scrollable，最终实现统一的滑动效果</p>
+</blockquote>
+</li>
+<li><p><strong>SliverAppbar</strong></p>
+<blockquote>
+<p>构造函数如下</p>
+</blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverAppBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.leading,         <span class="comment">//在标题左侧显示的一个控件，通常为一个图标</span></span><br><span class="line">    <span class="keyword">this</span>.automaticallyImplyLeading = <span class="keyword">true</span>,<span class="comment">//? 控制是否应该尝试暗示前导小部件为null</span></span><br><span class="line">    <span class="keyword">this</span>.title,           <span class="comment">//标题</span></span><br><span class="line">    <span class="keyword">this</span>.actions,          <span class="comment">//右侧的操作菜单，最多三个</span></span><br><span class="line">    <span class="keyword">this</span>.flexibleSpace,    <span class="comment">//可以展开的区域，通常是一个FlexibleSpaceBar</span></span><br><span class="line">    <span class="keyword">this</span>.bottom,         <span class="comment">//底部内容区域，通常是 TabBar</span></span><br><span class="line">    <span class="keyword">this</span>.elevation,            <span class="comment">//阴影</span></span><br><span class="line">    <span class="keyword">this</span>.forceElevated = <span class="keyword">false</span>, </span><br><span class="line">    <span class="keyword">this</span>.backgroundColor,       <span class="comment">//APP bar 的颜色，默认值为 ThemeData.primaryColor</span></span><br><span class="line">    <span class="keyword">this</span>.brightness,   <span class="comment">//Appbar的主题，有白色和黑色两种主题</span></span><br><span class="line">    <span class="keyword">this</span>.iconTheme,  <span class="comment">//Appbar 上图标的颜色、透明度、和尺寸信息</span></span><br><span class="line">    <span class="keyword">this</span>.textTheme,    <span class="comment">//Appbar 上的文字主题</span></span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>,  <span class="comment">//此应用栏是否显示在屏幕顶部</span></span><br><span class="line">    <span class="keyword">this</span>.centerTitle,     <span class="comment">//标题是否居中显示，默认值根据不同的操作系统</span></span><br><span class="line">    <span class="keyword">this</span>.titleSpacing = NavigationToolbar.kMiddleSpacing,<span class="comment">//横轴上标题内容 周围的间距</span></span><br><span class="line">    <span class="keyword">this</span>.expandedHeight,     <span class="comment">//展开高度</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>,       <span class="comment">//是否随着滑动隐藏标题</span></span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>,  <span class="comment">//是否固定在顶部</span></span><br><span class="line">    <span class="keyword">this</span>.snap = <span class="keyword">false</span>,   <span class="comment">//与floating结合使用</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>FlexibleSpaceBar</strong></p>
+<p>一般和<code>SliverAppBar</code>的 flexibleSpace 配合使用，<code>collapseMode</code>收起来的动画效果，CollapseMode.pin 直接推起来，CollapseMode.parallax 视差效果，CollapseMode.none</p>
+</li>
+</ul>
+<h5 id="代码如下"><a href="#代码如下" class="headerlink" title="代码如下"></a>代码如下</h5><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TabPage4</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement build</span></span><br><span class="line">    <span class="keyword">return</span> TabPageDemo();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TabPageDemo</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _TabPageDemoState createState() =&gt; _TabPageDemoState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_TabPageDemoState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">TabPageDemo</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">with</span> <span class="title">SingleTickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  TabController _tabController;</span><br><span class="line">  ScrollController _scrollviewController;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _tabController = TabController(length: <span class="number">4</span>, vsync: <span class="keyword">this</span>);</span><br><span class="line">    _scrollviewController = ScrollController(initialScrollOffset: <span class="number">0.0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    _tabController.dispose();</span><br><span class="line">    _scrollviewController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      child: Scaffold(</span><br><span class="line">        body: NestedScrollView(</span><br><span class="line">            controller: _scrollviewController,</span><br><span class="line">            headerSliverBuilder: (context, boxIsScrolled) &#123;</span><br><span class="line">              <span class="keyword">return</span> [</span><br><span class="line">                SliverAppBar(</span><br><span class="line">                  pinned: <span class="keyword">true</span>, 是否固定在顶部</span><br><span class="line">                  floating: <span class="keyword">true</span>,</span><br><span class="line">                  elevation: <span class="number">0.5</span>,</span><br><span class="line">                  forceElevated: boxIsScrolled,</span><br><span class="line">                  expandedHeight: <span class="number">240.0</span>,</span><br><span class="line">                  flexibleSpace: FlexibleSpaceBar(</span><br><span class="line">                    collapseMode: CollapseMode.pin, <span class="comment">//视差效果</span></span><br><span class="line">                    background: Container(</span><br><span class="line">                      color: Colors.white,</span><br><span class="line">                      child: Column(</span><br><span class="line">                        children: &lt;Widget&gt;[</span><br><span class="line">                          Container(</span><br><span class="line">                            height: <span class="number">180.0</span>,</span><br><span class="line">                            color: Colors.blue,</span><br><span class="line">                            child: Image.asset(</span><br><span class="line">                              <span class="string">"assets/images/timg.jpeg"</span>,</span><br><span class="line">                              fit: BoxFit.fill,</span><br><span class="line">                            ),</span><br><span class="line">                          )</span><br><span class="line">                        ],</span><br><span class="line">                      ),</span><br><span class="line">                    ),</span><br><span class="line">                  ),</span><br><span class="line">                  bottom: TabBar(controller: _tabController, tabs: [</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"活动专题"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"促销专栏"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"新品上市"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"精品推荐"</span>,</span><br><span class="line">                    )</span><br><span class="line">                  ]),</span><br><span class="line">                ),</span><br><span class="line">              ];</span><br><span class="line">            &#125;,</span><br><span class="line">            body: TabBarView(</span><br><span class="line">                controller: _tabController,</span><br><span class="line">                children: [PageOne(), PageOne(), PageOne(), PageOne()]))</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">NestedScrollView</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Flutter</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/13/Flutter-NestedScrollView使用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Flutter-NestedScrollView-使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/13/Flutter-NestedScrollView-使用/">Flutter NestedScrollView 使用</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/13/Flutter-NestedScrollView-使用/" class="archive-article-date">
+  	<time datetime="2019-06-13T01:48:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Flutter-NestedScrollView-使用"><a href="#Flutter-NestedScrollView-使用" class="headerlink" title="Flutter NestedScrollView 使用"></a>Flutter NestedScrollView 使用</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>​       在我们使用开发Android的过程中总是遇到一些联动的效果，在Android原生中<code>NestedScrollView</code>和<code>Toolbar</code>配合进行交互，进行很多折叠效果。在Flutter中也也是可以通过<code>NestedScrollView</code>进行折叠效果，不过Flutter中使用<code>SliverAppBar</code>来代替<code>Toolbar</code>。</p>
+<p>​        说到<code>SliverAppBar</code> 我们就有必要了解下 <code>Slivers</code>家族，官网给出的<code>Slivers</code>家族主要是为了解决复杂的滑动嵌套布局。<code>Slivers</code>家族基本都是配合<code>CustomScrollView</code>来使用的的。</p>
+<p><code>Slivers</code>家族的成员还比较多，下面我对部分成员进行解释：</p>
+<ul>
+<li><p><strong>CustomScrollView</strong></p>
+<blockquote>
+<p>官网给出的解释如下：</p>
+<p>​     CustomScrollView是可以使用sliver来自定义滚动模型（效果）的widget。它可以包含多种滚动模型，举个例子，假设有一个页面，顶部需要一个GridView，底部需要一个ListView，而要求整个页面的滑动效果是统一的，即它们看起来是一个整体，如果使用GridView+ListView来实现的话，就不能保证一致的滑动效果，因为它们的滚动效果是分离的，所以这时就需要一个”胶水”，把这些彼此独立的可滚动widget（Sliver）”粘”起来，而CustomScrollView的功能就相当于“胶水”。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p><strong>Slivers</strong>家族</p>
+<blockquote>
+<p>Sliver有细片、小片之意，在Flutter中，Sliver通常指具有特定滚动效果的可滚动块。可滚动widget，如ListView、GridView等都有对应的Sliver实现如SliverList、SliverGrid等。对于大多数Sliver来说，它们和可滚动Widget最主要的区别是<strong>Sliver不会包含Scrollable Widget，也就是说Sliver本身不包含滚动交互模型</strong> ，正因如此，CustomScrollView才可以将多个Sliver”粘”在一起，这些Sliver共用CustomScrollView的Scrollable，最终实现统一的滑动效果</p>
+</blockquote>
+</li>
+<li><p><strong>SliverAppbar</strong></p>
+<blockquote>
+<p>构造函数如下</p>
+</blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverAppBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.leading,         <span class="comment">//在标题左侧显示的一个控件，通常为一个图标</span></span><br><span class="line">    <span class="keyword">this</span>.automaticallyImplyLeading = <span class="keyword">true</span>,<span class="comment">//? 控制是否应该尝试暗示前导小部件为null</span></span><br><span class="line">    <span class="keyword">this</span>.title,           <span class="comment">//标题</span></span><br><span class="line">    <span class="keyword">this</span>.actions,          <span class="comment">//右侧的操作菜单，最多三个</span></span><br><span class="line">    <span class="keyword">this</span>.flexibleSpace,    <span class="comment">//可以展开的区域，通常是一个FlexibleSpaceBar</span></span><br><span class="line">    <span class="keyword">this</span>.bottom,         <span class="comment">//底部内容区域，通常是 TabBar</span></span><br><span class="line">    <span class="keyword">this</span>.elevation,            <span class="comment">//阴影</span></span><br><span class="line">    <span class="keyword">this</span>.forceElevated = <span class="keyword">false</span>, </span><br><span class="line">    <span class="keyword">this</span>.backgroundColor,       <span class="comment">//APP bar 的颜色，默认值为 ThemeData.primaryColor</span></span><br><span class="line">    <span class="keyword">this</span>.brightness,   <span class="comment">//Appbar的主题，有白色和黑色两种主题</span></span><br><span class="line">    <span class="keyword">this</span>.iconTheme,  <span class="comment">//Appbar 上图标的颜色、透明度、和尺寸信息</span></span><br><span class="line">    <span class="keyword">this</span>.textTheme,    <span class="comment">//Appbar 上的文字主题</span></span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>,  <span class="comment">//此应用栏是否显示在屏幕顶部</span></span><br><span class="line">    <span class="keyword">this</span>.centerTitle,     <span class="comment">//标题是否居中显示，默认值根据不同的操作系统</span></span><br><span class="line">    <span class="keyword">this</span>.titleSpacing = NavigationToolbar.kMiddleSpacing,<span class="comment">//横轴上标题内容 周围的间距</span></span><br><span class="line">    <span class="keyword">this</span>.expandedHeight,     <span class="comment">//展开高度</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>,       <span class="comment">//是否随着滑动隐藏标题</span></span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>,  <span class="comment">//是否固定在顶部</span></span><br><span class="line">    <span class="keyword">this</span>.snap = <span class="keyword">false</span>,   <span class="comment">//与floating结合使用</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>FlexibleSpaceBar</strong></p>
+<p>一般和<code>SliverAppBar</code>的 flexibleSpace 配合使用，<code>collapseMode</code>收起来的动画效果，CollapseMode.pin 直接推起来，CollapseMode.parallax 视差效果，CollapseMode.none</p>
+</li>
+</ul>
+<h5 id="代码如下"><a href="#代码如下" class="headerlink" title="代码如下"></a>代码如下</h5><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TabPage4</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> implement build</span></span><br><span class="line">    <span class="keyword">return</span> TabPageDemo();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TabPageDemo</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _TabPageDemoState createState() =&gt; _TabPageDemoState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_TabPageDemoState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">TabPageDemo</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">with</span> <span class="title">SingleTickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  TabController _tabController;</span><br><span class="line">  ScrollController _scrollviewController;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _tabController = TabController(length: <span class="number">4</span>, vsync: <span class="keyword">this</span>);</span><br><span class="line">    _scrollviewController = ScrollController(initialScrollOffset: <span class="number">0.0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    _tabController.dispose();</span><br><span class="line">    _scrollviewController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      child: Scaffold(</span><br><span class="line">        body: NestedScrollView(</span><br><span class="line">            controller: _scrollviewController,</span><br><span class="line">            headerSliverBuilder: (context, boxIsScrolled) &#123;</span><br><span class="line">              <span class="keyword">return</span> [</span><br><span class="line">                SliverAppBar(</span><br><span class="line">                  pinned: <span class="keyword">true</span>, 是否固定在顶部</span><br><span class="line">                  floating: <span class="keyword">true</span>,</span><br><span class="line">                  elevation: <span class="number">0.5</span>,</span><br><span class="line">                  forceElevated: boxIsScrolled,</span><br><span class="line">                  expandedHeight: <span class="number">240.0</span>,</span><br><span class="line">                  flexibleSpace: FlexibleSpaceBar(</span><br><span class="line">                    collapseMode: CollapseMode.pin, <span class="comment">//视差效果</span></span><br><span class="line">                    background: Container(</span><br><span class="line">                      color: Colors.white,</span><br><span class="line">                      child: Column(</span><br><span class="line">                        children: &lt;Widget&gt;[</span><br><span class="line">                          Container(</span><br><span class="line">                            height: <span class="number">180.0</span>,</span><br><span class="line">                            color: Colors.blue,</span><br><span class="line">                            child: Image.asset(</span><br><span class="line">                              <span class="string">"assets/images/timg.jpeg"</span>,</span><br><span class="line">                              fit: BoxFit.fill,</span><br><span class="line">                            ),</span><br><span class="line">                          )</span><br><span class="line">                        ],</span><br><span class="line">                      ),</span><br><span class="line">                    ),</span><br><span class="line">                  ),</span><br><span class="line">                  bottom: TabBar(controller: _tabController, tabs: [</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"活动专题"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"促销专栏"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"新品上市"</span>,</span><br><span class="line">                    ),</span><br><span class="line">                    Tab(</span><br><span class="line">                      text: <span class="string">"精品推荐"</span>,</span><br><span class="line">                    )</span><br><span class="line">                  ]),</span><br><span class="line">                ),</span><br><span class="line">              ];</span><br><span class="line">            &#125;,</span><br><span class="line">            body: TabBarView(</span><br><span class="line">                controller: _tabController,</span><br><span class="line">                children: [PageOne(), PageOne(), PageOne(), PageOne()]))</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">flutter</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">NestedScrollView</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/13/Flutter-NestedScrollView-使用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="android-App启动白屏问题" class="article article-type-android  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
