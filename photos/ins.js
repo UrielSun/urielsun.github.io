@@ -112,12 +112,13 @@
     };
     var render = function render(res) {
       var ulTmpl = "";
+      var baseUrl = "http://pt2ku9jqo.bkt.clouddn.com/"
       for (var j = 0, len2 = res.list.length; j < len2; j++) {
         var data = res.list[j].arr;
         var liTmpl = "";
         for (var i = 0, len = data.link.length; i < len; i++) {
-          var minSrc = data.link[i]+"?imageView2/1/w/200";
-          var src = data.link[i];
+          var minSrc = baseUrl+data.link[i]+"?imageView2/1/w/200";
+          var src = baseUrl+data.link[i];
           var type = data.type[i];
 
           var height = data.height_width[i][0];
