@@ -117,8 +117,8 @@
         var data = res.list[j].arr;
         var liTmpl = "";
         for (var i = 0, len = data.link.length; i < len; i++) {
-          var minSrc = "http://pt2ku9jqo.bkt.clouddn.com/"+data.link[i]+"?imageView2/1/w/200";
-          var src = "http://pt2ku9jqo.bkt.clouddn.com/"+data.link[i];
+          var minSrc = data.link[i]+"?imageView2/1/w/200";
+          var src = data.link[i];
           var type = data.type[i];
 
           var height = data.height_width[i][0];
