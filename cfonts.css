@@ -1,0 +1,33 @@
+@font-face {font-family: "iconfont_c";
+  src: url('cfonts/iconfont_c.eot'); /* IE9 */
+  src: url('cfonts/iconfont_c.eot#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('./cfonts/iconfont_c.woff') format('woff'),
+  url('./cfonts/iconfont_c.ttf') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('./cfonts/iconfont_c.svg#iconfont_c') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont_c {
+  font-family: "iconfont_c" !important;
+  font-size: 16px;
+  speak: none;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon_cshijian:before {
+  content: "\e61e";
+}
+
+.icon_cpinglun:before {
+  content: "\e68e";
+}
+
+.icon_cshuju:before {
+  content: "\e675";
+}
+
+.icon_cpinglun1:before {
+  content: "\e621";
+}
+
