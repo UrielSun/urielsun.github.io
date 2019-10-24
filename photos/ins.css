@@ -28,7 +28,7 @@
 	width: 23%;
 	height: 0;
 	margin: 4px;
-	padding-bottom: 18%;
+	padding-bottom: 23%;
 	position: relative;
 	display: inline-block;
 	text-align: center;
@@ -58,7 +58,7 @@
 	height: 0;
 	width: 25%;
 	position: relative;
-	padding-bottom: 25%;
+	padding-bottom: 20%;
 }
 .instagram .album li:before{
 	display: none;
