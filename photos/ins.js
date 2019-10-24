@@ -117,7 +117,7 @@
         var data = res.list[j].arr;
         var liTmpl = "";
         for (var i = 0, len = data.link.length; i < len; i++) {
-          var minSrc = baseUrl+ data.link[i]+"?imageView2/1/w/648/h/432";
+          var minSrc = baseUrl+ data.link[i]+"?imageView2/3/w/162";
           var src = baseUrl+ data.link[i];
           var type = data.type[i];
 
