@@ -112,12 +112,12 @@
     };
     var render = function render(res) {
       var ulTmpl = "";
-      var baseUrl = "http://image.sunwrite.top";
+      var baseUrl = "http://image.sunwrite.top/";
       for (var j = 0, len2 = res.list.length; j < len2; j++) {
         var data = res.list[j].arr;
         var liTmpl = "";
         for (var i = 0, len = data.link.length; i < len; i++) {
-          var minSrc = baseUrl+ data.link[i];
+          var minSrc = baseUrl+ data.link[i]+"?imageView2/5/w/200/h/200";
           var src = baseUrl+ data.link[i];
           var type = data.type[i];
 
