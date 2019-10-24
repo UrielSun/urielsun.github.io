@@ -26,9 +26,9 @@
 }
 .instagram .thumb {
 	width: 23%;
-	height: 10%;
+	height: 0;
 	margin: 4px;
-	padding-bottom: 23%;
+	padding-bottom: 10%;
 	position: relative;
 	display: inline-block;
 	text-align: center;
